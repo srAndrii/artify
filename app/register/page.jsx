@@ -47,7 +47,7 @@ const Register = () => {
             });
 
             if (response.ok) {
-                router.push("/");
+                router.push("/login");
             }
         } catch (err) {
             console.log("Registration failed", err.message);
