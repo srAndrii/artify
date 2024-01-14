@@ -2,10 +2,10 @@ import { connectToDB } from "@mongodb/database";
 import User from "@models/User";
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
-import { writeFile } from "fs/promises";.
+import { writeFile } from "fs/promises";
 
 // User Register
-export async function Post(req) {
+export async function POST(req) {
     try {
         await connectToDB();
 
@@ -15,7 +15,7 @@ export async function Post(req) {
         const username = data.get("username");
         const email = data.get("email");
         const password = data.get("password");
-        const file = data.get("profileImagePath");
+        const file = data.get("profileImage");
 
         if (!file) {
             return NextResponse.json(

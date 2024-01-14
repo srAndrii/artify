@@ -13,7 +13,6 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, "Passsword is required"],
     },
     profileImagePath: {
         type: String,
