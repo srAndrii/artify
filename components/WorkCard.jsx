@@ -1,5 +1,6 @@
 import {ArrowBackIosNew, ArrowForwardIos} from "@mui/icons-material";
 import "@styles/WorkCard.scss";
+import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 const WorkCard = ({work}) => {
@@ -18,9 +19,15 @@ const WorkCard = ({work}) => {
                 work.workPhotoPaths.length
         );
     };
+    const router = useRouter();
 
     return (
-        <div className='work-card'>
+        <div
+            className='work-card'
+            onClick={() => {
+                router.push(`/work-details?id=${work._id}`);
+            }}
+        >
             <div className='slider-container'>
                 <div
                     className='slider'
