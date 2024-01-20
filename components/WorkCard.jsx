@@ -1,10 +1,17 @@
-import {ArrowBackIosNew, ArrowForwardIos} from "@mui/icons-material";
+import {
+    ArrowBackIosNew,
+    ArrowForwardIos,
+    Delete,
+    FavoriteBorder,
+} from "@mui/icons-material";
 import "@styles/WorkCard.scss";
+import {useSession} from "next-auth/react";
 
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 const WorkCard = ({work}) => {
+    // SLIDER
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const goToNextSlide = () => {
@@ -22,6 +29,27 @@ const WorkCard = ({work}) => {
     };
     const router = useRouter();
 
+    // DELETE WORK
+    const handleDelete = async () => {
+        const hasConfirmed = confirm(
+            "Are you sure you want to delete this work?"
+        );
+
+        if (hasConfirmed) {
+            try {
+                await fetch(`api/work/${work._id}`, {
+                    method: "DELETE",
+                });
+                window.location.reload();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+
+    const {data: session, update} = useSession();
+    const userId = session?.user?._id;
+
     return (
         <div
             className='work-card'
@@ -35,7 +63,7 @@ const WorkCard = ({work}) => {
                     style={{transform: `translateX(-${currentIndex * 100}%)`}}
                 >
                     {work.workPhotoPaths?.map((photo, index) => (
-                        <div className='slide'>
+                        <div className='slide' key={index}>
                             <img src={photo} alt='Work Card Photo' />
                             <div
                                 className='prev-button'
@@ -73,6 +101,35 @@ const WorkCard = ({work}) => {
                 </div>
                 <div className='price'> ${work.price} </div>
             </div>
+            {userId === work?.creator._id ? (
+                <div
+                    className='icon'
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete();
+                    }}
+                >
+                    <Delete
+                        sx={{
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                            padding: "5px",
+                            fontSize: "30px",
+                        }}
+                    />
+                </div>
+            ) : (
+                <div className='icon'>
+                    <FavoriteBorder
+                        sx={{
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                            padding: "5px",
+                            fontSize: "30px",
+                        }}
+                    />
+                </div>
+            )}
         </div>
     );
 };
