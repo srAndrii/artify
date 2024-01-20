@@ -22,7 +22,7 @@ const WorkDetails = () => {
 
     useEffect(() => {
         const getWorkDetails = async () => {
-            const response = await fetch(`api/work/new/${workId}`, {
+            const response = await fetch(`api/work/${workId}`, {
                 method: "GET",
             });
             const data = await response.json();
@@ -81,7 +81,12 @@ const WorkDetails = () => {
                 <div className='title'>
                     <h1>{work.title}</h1>
                     {work?.creator?._id === userId ? (
-                        <div className='save'>
+                        <div
+                            className='save'
+                            onClick={() => {
+                                router.push(`update-work?id=${workId}`);
+                            }}
+                        >
                             <Edit />
                             <p>Edit</p>
                         </div>
