@@ -6,6 +6,7 @@ import {signOut, useSession} from "next-auth/react";
 import Link from "next/link";
 import {useState} from "react";
 import "@styles/Navbar.scss";
+import {useRouter} from "next/navigation";
 
 const Navbar = () => {
     const {data: session} = useSession();
@@ -18,15 +19,27 @@ const Navbar = () => {
         signOut({callbackUrl: "/login"});
     };
 
+    const [query, setQuery] = useState("");
+
+    const router = useRouter();
+    const searchWork = async () => {
+        router.push(`/search/${query}`);
+    };
+
     return (
         <div className='navbar'>
             <a href='/'>
                 <img src='/assets/logo.png' alt='logo' />
             </a>
             <div className='navbar_search'>
-                <input type='text' placeholder='Search...' />
-                <IconButton>
-                    <Search sx={{color: "red"}} />
+                <input
+                    type='text'
+                    placeholder='Search...'
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                />
+                <IconButton disabled={query === ""}>
+                    <Search sx={{color: "red"}} onClick={searchWork} />
                 </IconButton>
             </div>
             <div className='navbar_right'>
