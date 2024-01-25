@@ -26,6 +26,8 @@ const Navbar = () => {
         router.push(`/search/${query}`);
     };
 
+    const cart = user?.cart;
+
     return (
         <div className='navbar'>
             <a href='/'>
@@ -45,7 +47,7 @@ const Navbar = () => {
             <div className='navbar_right'>
                 <a href='/cart' className='cart'>
                     <ShoppingCart sx={{color: "gray"}} />
-                    Cart <span>(1)</span>
+                    Cart <span>({cart?.length})</span>
                 </a>
                 <button
                     className='navbar_right_account'

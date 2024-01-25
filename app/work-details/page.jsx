@@ -89,6 +89,46 @@ const WorkDetails = () => {
         update({user: {wishlist: data.wishlist}}); // update session
     };
 
+    // Add to cart
+
+    const cart = session?.user?.cart;
+
+    const isInCart = cart?.find((item) => item?.workId === workId);
+
+    const addToCart = async () => {
+        const newCartItem = {
+            workId,
+            image: work.workPhotoPaths[0],
+            title: work.title,
+            category: work.category,
+            creator: work.creator,
+            price: work.price,
+            quantity: 1,
+        };
+
+        if (!isInCart) {
+            const newCart = [...cart, newCartItem];
+
+            try {
+                await fetch(`/api/user/${userId}/cart`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({cart: newCart}),
+                });
+                update({user: {cart: newCart}});
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            confirm("This item is already in your cart");
+            return;
+        }
+    };
+
+    console.log(session?.user?.cart);
+
     return loading ? (
         <Loader />
     ) : (
@@ -192,7 +232,7 @@ const WorkDetails = () => {
                 <p>{work.description}</p>
 
                 <h1>${work.price}</h1>
-                <button type='submit'>
+                <button type='submit' onClick={addToCart}>
                     <ShoppingCart />
                     ADD TO CART
                 </button>
