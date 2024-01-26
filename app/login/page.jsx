@@ -1,10 +1,11 @@
 "use client";
 
 import "@styles/Login.scss";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import {signIn} from "next-auth/react";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import toast from "react-hot-toast";
+import {FcGoogle} from "react-icons/fc";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -24,6 +25,7 @@ const Login = () => {
             });
 
             if (response.ok) {
+                toast.success("Successfully Loged In");
                 router.push("/");
             }
 
@@ -36,37 +38,37 @@ const Login = () => {
     };
 
     const loginWithGoogle = () => {
-        signIn("google", { callbackUrl: "/" });
+        signIn("google", {callbackUrl: "/"});
     };
     return (
-        <div className="login">
-            <img src="/assets/login.jpg" alt="login" className="login_decor" />
-            <div className="login_content">
-                <form className="login_content_form" onSubmit={handleSubmit}>
+        <div className='login'>
+            <img src='/assets/login.jpg' alt='login' className='login_decor' />
+            <div className='login_content'>
+                <form className='login_content_form' onSubmit={handleSubmit}>
                     <input
-                        placeholder="Email"
-                        name="email"
-                        type="email"
+                        placeholder='Email'
+                        name='email'
+                        type='email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                     <input
-                        placeholder="Password"
-                        name="password"
-                        type="password"
+                        placeholder='Password'
+                        name='password'
+                        type='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    {error && <p className="error">{error}</p>}
-                    <button type="submit">Log In</button>
+                    {error && <p className='error'>{error}</p>}
+                    <button type='submit'>Log In</button>
                 </form>
-                <button className="google" onClick={loginWithGoogle}>
+                <button className='google' onClick={loginWithGoogle}>
                     <p>Log In with Google</p>
                     <FcGoogle />
                 </button>
-                <a href="/register">Don't have an account? Sign In Here</a>
+                <a href='/register'>Don't have an account? Sign In Here</a>
             </div>
         </div>
     );

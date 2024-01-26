@@ -1,16 +1,18 @@
 import Provider from "@components/Provider";
 import "@styles/globals.css";
+import {Toaster} from "react-hot-toast";
 
 export const metadata = {
     title: "Artify",
     description: "Discover and Share Art",
 };
 
-const layout = ({ children }) => {
+const layout = ({children}) => {
     return (
-        <html lang="en">
+        <html lang='en'>
             <body>
                 <Provider>
+                    <Toaster position='top-right' reverseOrder={true} />
                     <main>{children}</main>
                 </Provider>
             </body>

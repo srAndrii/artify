@@ -10,6 +10,8 @@ import {
     Delete,
     RemoveCircle,
 } from "@mui/icons-material";
+import getStripe from "@lib/getStripe";
+import toast from "react-hot-toast";
 
 const Cart = () => {
     const {data: session, update} = useSession();
@@ -60,6 +62,35 @@ const Cart = () => {
         const newCart = cart.filter((item) => item.workId !== cartItem.workId);
         updateCart(newCart);
     };
+
+    const handleCheckout = async () => {
+        const stripe = await getStripe();
+
+        const response = await fetch("/api/stripe", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({cart, userId}),
+        });
+
+        if (response.statusCode === 500) {
+            return;
+        }
+
+        const data = await response.json();
+
+        toast.loading("Redirecting to checkout...");
+
+        const result = stripe.redirectToCheckout({sessionId: data.id});
+
+        if (result.error) {
+            console.log(result.error.message);
+            toast.error("Something went wrong");
+        }
+    };
+
+    console.log(cart);
 
     return !session?.user?.cart ? (
         <Loader />
@@ -130,7 +161,9 @@ const Cart = () => {
                                 <a href='/'>
                                     <ArrowCircleLeft /> Continue Shopping
                                 </a>
-                                <button>CHECK OUT NOW</button>
+                                <button onClick={handleCheckout}>
+                                    CHECK OUT NOW
+                                </button>
                             </div>
                         </div>
                     )}
