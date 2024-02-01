@@ -1,12 +1,15 @@
 "use client";
 import Form from "@components/Form";
 import Navbar from "@components/Navbar";
+import {useEdgeStore} from "@lib/edgestore";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 const CreateWork = () => {
     const {data: session} = useSession();
+    const {edgestore} = useEdgeStore();
+
     const router = useRouter();
 
     const [work, setWork] = useState({
@@ -26,21 +29,34 @@ const CreateWork = () => {
         e.preventDefault();
 
         try {
-            const newWorkForm = new FormData();
+            const photoUrls = [];
 
-            for (var key in work) {
-                newWorkForm.append(key, work[key]);
+            // Upload each photo and collect the URLs
+            for (const photo of work.photos) {
+                const res = await edgestore.publicFiles.upload({file: photo});
+                photoUrls.push(res.url);
             }
 
-            work.photos.forEach((photo) => {
-                newWorkForm.append("workPhotoPaths", photo);
-            });
+            // Update the work object with the photo URLs
+            const updatedWork = {...work, photos: photoUrls};
+
+            const newWorkForm = new FormData();
+
+            for (const key in updatedWork) {
+                if (key === "photos") {
+                    updatedWork[key].forEach((photoUrl, index) => {
+                        newWorkForm.append("photos", photoUrl);
+                    });
+                } else {
+                    newWorkForm.append(key, updatedWork[key]);
+                }
+            }
 
             const response = await fetch("/api/work/new", {
                 method: "POST",
                 body: newWorkForm,
             });
-
+            console.log(newWorkForm);
             if (response.ok) {
                 router.push(`/shop?id=${session?.user?._id}`);
             }
