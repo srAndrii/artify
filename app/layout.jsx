@@ -1,4 +1,5 @@
 import Provider from "@components/Provider";
+import {EdgeStoreProvider} from "@lib/edgestore";
 import "@styles/globals.css";
 import {Toaster} from "react-hot-toast";
 
@@ -13,7 +14,9 @@ const layout = ({children}) => {
             <body>
                 <Provider>
                     <Toaster position='top-right' reverseOrder={true} />
-                    <main>{children}</main>
+                    <EdgeStoreProvider>
+                        <main>{children}</main>
+                    </EdgeStoreProvider>
                 </Provider>
             </body>
         </html>

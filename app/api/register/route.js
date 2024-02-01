@@ -1,8 +1,7 @@
-import { connectToDB } from "@mongodb/database";
+import {connectToDB} from "@mongodb/database";
 import User from "@models/User";
-import { NextResponse } from "next/server";
-import { hash } from "bcryptjs";
-import { writeFile } from "fs/promises";
+import {NextResponse} from "next/server";
+import {hash} from "bcryptjs";
 
 // User Register
 export async function POST(req) {
@@ -17,27 +16,11 @@ export async function POST(req) {
         const password = data.get("password");
         const file = data.get("profileImage");
 
-        if (!file) {
-            return NextResponse.json(
-                { message: "No file upload" },
-                { status: 400 }
-            );
-        }
-
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        const profileImagePath = `C:/Users/Andrii/Desktop/projects/artify/public/uploads/${file.name}`;
-        await writeFile(profileImagePath, buffer);
-
-        console.log(`open ${profileImagePath} to see the uploaded files`);
-
-        // Check if user exist
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({email});
         if (existingUser) {
             return NextResponse.json(
-                { message: "User alredy exist!" },
-                { status: 409 }
+                {message: "User alredy exist!"},
+                {status: 409}
             );
         }
 
@@ -50,7 +33,7 @@ export async function POST(req) {
             username,
             email,
             password: hashedPasword,
-            profileImagePath: `uploads/${file.name}`,
+            profileImagePath: file,
         });
 
         //Save newUser
@@ -58,14 +41,14 @@ export async function POST(req) {
 
         // Send success message
         return NextResponse.json(
-            { message: "User registred successfuly!", user: newUser },
-            { status: 200 }
+            {message: "User registred successfuly!", user: newUser},
+            {status: 200}
         );
     } catch (err) {
         console.log(err);
         return NextResponse.json(
-            { message: "Fail to create new User" },
-            { status: 500 }
+            {message: "Fail to create new User"},
+            {status: 500}
         );
     }
 }
