@@ -18,27 +18,8 @@ export async function POST(req) {
         const price = data.get("price");
 
         // Get an  array of uploded photos
-        const photos = data.getAll("workPhotoPaths");
+        const photos = data.getAll("photos");
 
-        const workPhotoPaths = [];
-
-        //Process and store each photo
-        for (const photo of photos) {
-            // Read the photo as an ArrayBuffer
-            const bytes = await photo.arrayBuffer();
-
-            // Convert it to a Buffer
-            const buffer = Buffer.from(bytes);
-
-            // Define the destination path for the uploaded file
-            const workImagePath = `C:/Users/Andrii/Desktop/projects/artify/public/uploads/${photo.name}`;
-
-            // Write the buffer to the filessystem
-            await writeFile(workImagePath, buffer);
-
-            // Store the file path in an array
-            workPhotoPaths.push(`/uploads/${photo.name}`);
-        }
         /* Create a new Work */
         const newWork = new Work({
             creator,
@@ -46,7 +27,7 @@ export async function POST(req) {
             title,
             description,
             price,
-            workPhotoPaths,
+            workPhotoPaths: photos,
         });
 
         await newWork.save();
