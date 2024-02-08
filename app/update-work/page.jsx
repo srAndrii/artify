@@ -9,6 +9,8 @@ import {useEffect, useState} from "react";
 
 const UpdateWork = () => {
     const [loading, setLoading] = useState(true);
+    const [btnLoadinbg, setBtnLoadinbg] = useState(false);
+
     const {edgestore} = useEdgeStore();
 
     const searchParams = useSearchParams();
@@ -55,22 +57,19 @@ const UpdateWork = () => {
         e.preventDefault();
 
         try {
+            setBtnLoadinbg(true);
             const updatedWork = {...work, photos: []};
 
             for (const photo of work.photos) {
                 if (typeof photo === "string") {
-                    // Якщо це вже посилання, просто додаємо його до масиву
                     updatedWork.photos.push(photo);
                 } else {
-                    // Якщо це файл, завантажте його і додайте посилання на сервер
                     const res = await edgestore.publicFiles.upload({
                         file: photo,
                     });
                     updatedWork.photos.push(res.url);
                 }
             }
-
-            console.log(work);
 
             const updateFormWork = new FormData();
 
@@ -88,6 +87,8 @@ const UpdateWork = () => {
                 method: "PATCH",
                 body: updateFormWork,
             });
+
+            setBtnLoadinbg(false);
 
             if (response.ok) {
                 router.push(`/`);
@@ -107,6 +108,7 @@ const UpdateWork = () => {
                 work={work}
                 setWork={setWork}
                 handleSubmit={handleSubmit}
+                loading={btnLoadinbg}
             />
         </>
     );

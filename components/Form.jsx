@@ -2,8 +2,12 @@ import {categories} from "@data";
 import {IoIosImages} from "react-icons/io";
 import {BiTrash} from "react-icons/bi";
 import "@styles/Form.scss";
+import {useEdgeStore} from "@lib/edgestore";
+import Button from "./button/Button";
 
-const Form = ({type, work, setWork, handleSubmit}) => {
+const Form = ({type, work, setWork, loading, handleSubmit}) => {
+    const {edgestore} = useEdgeStore();
+
     const handleUploadPhotos = (e) => {
         const newPhotos = e.target.files;
         setWork((prevWork) => {
@@ -14,17 +18,26 @@ const Form = ({type, work, setWork, handleSubmit}) => {
         });
     };
 
-    const handleRemovePhoto = (indexToRemove) => {
-        setWork((prevWork) => {
-            return {
-                ...prevWork,
-                photos: prevWork.photos.filter(
-                    (_, index) => index !== indexToRemove
-                ),
-            };
-        });
-    };
+    const handleRemovePhoto = async (indexToRemove) => {
+        try {
+            const removedPhotoUrl = work.photos[indexToRemove];
 
+            await edgestore.publicFiles.delete({
+                url: removedPhotoUrl,
+            });
+
+            setWork((prevWork) => {
+                return {
+                    ...prevWork,
+                    photos: prevWork.photos.filter(
+                        (_, index) => index !== indexToRemove
+                    ),
+                };
+            });
+        } catch (error) {
+            console.error("Error deleting photo:", error.message);
+        }
+    };
     const handleChange = (e) => {
         const {name, value} = e.target;
         setWork((prevWork) => {
@@ -54,7 +67,6 @@ const Form = ({type, work, setWork, handleSubmit}) => {
                         </p>
                     ))}
                 </div>
-
                 <h3>Add some photos of your work</h3>
                 {work.photos.length < 1 && (
                     <div className='photos'>
@@ -110,7 +122,6 @@ const Form = ({type, work, setWork, handleSubmit}) => {
                         </label>
                     </div>
                 )}
-
                 <h3>What make your Work attractive?</h3>
                 <div className='description'>
                     <p>Title</p>
@@ -143,9 +154,7 @@ const Form = ({type, work, setWork, handleSubmit}) => {
                         className='price'
                     />
                 </div>
-                <button className='submit_btn' type='submit'>
-                    PUBLISH YOUR WORK
-                </button>
+                <Button text={"PUBLISH YOUR WORK"} loading={loading} />
             </form>
         </div>
     );

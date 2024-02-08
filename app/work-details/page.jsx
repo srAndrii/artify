@@ -127,8 +127,6 @@ const WorkDetails = () => {
         }
     };
 
-    console.log(session?.user?.cart);
-
     return loading ? (
         <Loader />
     ) : (
@@ -166,7 +164,7 @@ const WorkDetails = () => {
                         }}
                     >
                         {work.workPhotoPaths?.map((photo, index) => (
-                            <div className='slide'>
+                            <div className='slide' key={index}>
                                 <img src={photo} alt='Work Card Photo' />
                                 <div
                                     className='prev-button'
@@ -200,7 +198,7 @@ const WorkDetails = () => {
                                 key={index}
                                 onClick={() => handleSelectedPhoto(index)}
                                 className={
-                                    selectedPhoto === index ? "selected" : ""
+                                    index === currentIndex ? "selected" : ""
                                 }
                             />
                         ))}

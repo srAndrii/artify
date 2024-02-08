@@ -7,6 +7,8 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 const CreateWork = () => {
+    const [loading, setLoading] = useState(false);
+
     const {data: session} = useSession();
     const {edgestore} = useEdgeStore();
 
@@ -29,6 +31,7 @@ const CreateWork = () => {
         e.preventDefault();
 
         try {
+            setLoading(true);
             const photoUrls = [];
 
             // Upload each photo and collect the URLs
@@ -57,6 +60,7 @@ const CreateWork = () => {
                 body: newWorkForm,
             });
             console.log(newWorkForm);
+            setLoading(false);
             if (response.ok) {
                 router.push(`/shop?id=${session?.user?._id}`);
             }
@@ -73,6 +77,7 @@ const CreateWork = () => {
                 work={work}
                 setWork={setWork}
                 handleSubmit={handleSubmit}
+                loading={loading}
             />
         </>
     );

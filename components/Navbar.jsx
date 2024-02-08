@@ -11,7 +11,6 @@ import {useRouter} from "next/navigation";
 const Navbar = () => {
     const {data: session} = useSession();
     const user = session?.user;
-    console.log(user);
 
     const [dropdownMenu, setDropdownMenu] = useState(false);
 
@@ -40,8 +39,8 @@ const Navbar = () => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-                <IconButton disabled={query === ""}>
-                    <Search sx={{color: "red"}} onClick={searchWork} />
+                <IconButton disabled={query === ""} onClick={searchWork}>
+                    <Search sx={{color: "red"}} />
                 </IconButton>
             </div>
             <div className='navbar_right'>
@@ -60,7 +59,13 @@ const Navbar = () => {
                         <img
                             src={user.profileImagePath}
                             alt='profile'
-                            style={{objectFit: "cover", borderRadius: "50%"}}
+                            style={{
+                                objectFit: "cover",
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                            }}
+                            referrerPolicy='no-referrer'
                         />
                     )}
                 </button>

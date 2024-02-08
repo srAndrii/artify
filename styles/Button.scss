@@ -1,0 +1,26 @@
+@import "./variables.module.scss";
+
+.submit_btn {
+    margin-top: 40px;
+
+    @include buttonStyle;
+
+    &:hover {
+        box-shadow: 0 0 10px 3px rgb(117, 117, 117);
+    }
+}
+.spinner {
+    animation-name: spin;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

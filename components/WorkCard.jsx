@@ -111,8 +111,21 @@ const WorkCard = ({work}) => {
                         <img
                             src={work.creator.profileImagePath}
                             alt='creator'
+                            referrerPolicy='no-referrer'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/shop?id=${work.creator._id}`);
+                            }}
                         />
-                        <span>{work.creator.username}</span> in
+                        <span
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/shop?id=${work.creator._id}`);
+                            }}
+                        >
+                            {work.creator.username}
+                        </span>
+                        in
                         <span>{work.category}</span>
                     </div>
                 </div>
