@@ -16,6 +16,24 @@ const Register = () => {
         confirmPasword: "",
         profileImage: null,
     });
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+    const handlePasswordValidation = () => {
+        if (formData.password.length < 6) {
+            setPasswordError("Пароль має бути не менше 6 символів");
+        } else {
+            setPasswordError("");
+        }
+    };
+
+    const handleConfirmPasswordValidation = () => {
+        if (formData.password !== formData.confirmPasword) {
+            setConfirmPasswordError("Паролі не співпадають");
+        } else {
+            setConfirmPasswordError("");
+        }
+    };
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -24,7 +42,7 @@ const Register = () => {
         if (files) {
             setFile(files[0]);
         }
-        console.log(file);
+
 
         setFormData({
             ...formData,
@@ -114,18 +132,23 @@ const Register = () => {
                         type='password'
                         value={formData.password}
                         onChange={handleChange}
+                        onBlur={handlePasswordValidation}
                         required
                     />
+                    {passwordError && (
+                        <p style={{color: "red"}}>{passwordError}</p>
+                    )}
                     <input
                         placeholder='Confirm Password'
                         name='confirmPasword'
                         type='password'
                         value={formData.confirmPasword}
                         onChange={handleChange}
+                        onBlur={handleConfirmPasswordValidation}
                         required
                     />
-                    {!passwordMatch && (
-                        <p style={{color: "red"}}>Passwords are not matched!</p>
+                    {confirmPasswordError && (
+                        <p style={{color: "red"}}>{confirmPasswordError}</p>
                     )}
                     <input
                         id='image'
@@ -151,7 +174,10 @@ const Register = () => {
                             }}
                         />
                     )}
-                    <button type='submit' disabled={!passwordMatch}>
+                    <button
+                        type='submit'
+                        disabled={!passwordMatch || passwordError}
+                    >
                         Register
                     </button>
                 </form>

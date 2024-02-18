@@ -124,7 +124,6 @@ const WorkDetails = () => {
             }
             toast.success(" Work added to cart");
         } else {
-            // confirm("This item is already in your cart");
             toast.error("This item is already in your cart");
 
             return;

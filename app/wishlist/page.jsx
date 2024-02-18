@@ -10,8 +10,6 @@ const Wishlist = () => {
     const {data: session} = useSession();
     const wishlist = session?.user?.wishlist;
 
-    console.log(wishlist);
-
     return !session ? (
         <Loader />
     ) : (

@@ -52,7 +52,6 @@ const UpdateWork = () => {
             getWorkDetails();
         }
     }, [workId]);
-    console.log(work);
 
     const router = useRouter();
 
