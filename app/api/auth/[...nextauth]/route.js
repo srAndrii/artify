@@ -1,9 +1,9 @@
 import User from "@models/User";
-import { connectToDB } from "@mongodb/database";
+import {connectToDB} from "@mongodb/database";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcryptjs";
+import {compare} from "bcryptjs";
 
 const handler = NextAuth({
     providers: [
@@ -23,10 +23,10 @@ const handler = NextAuth({
             async authorize(credentials, req) {
                 await connectToDB();
 
-                const { email, password } = credentials;
+                const {email, password} = credentials;
 
                 // Check if the user exists
-                const user = await User.findOne({ email: email });
+                const user = await User.findOne({email: email});
                 if (!user) {
                     throw new Error("Invalid Email or Password");
                 }
@@ -45,20 +45,20 @@ const handler = NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
 
     callbacks: {
-        async session({ session }) {
+        async session({session}) {
             const sessionUser = await User.findOne({
                 email: session.user.email,
             });
             session.user.id = sessionUser._id.toString();
-            session.user = { ...session.user, ...sessionUser._doc };
+            session.user = {...session.user, ...sessionUser._doc};
             return session;
         },
-        async signIn({ account, profile }) {
+        async signIn({account, profile}) {
             if (account.provider === "google") {
                 try {
                     await connectToDB();
                     //Check is the user exist
-                    let user = await User.findOne({ email: profile.email });
+                    let user = await User.findOne({email: profile.email});
 
                     if (!user) {
                         user = await User.create({
@@ -81,4 +81,4 @@ const handler = NextAuth({
     },
 });
 
-export { handler as GET, handler as POST };
+export {handler as GET, handler as POST};

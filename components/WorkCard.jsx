@@ -10,6 +10,7 @@ import {useSession} from "next-auth/react";
 
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import toast from "react-hot-toast";
 
 const WorkCard = ({work}) => {
     // SLIDER
@@ -31,21 +32,63 @@ const WorkCard = ({work}) => {
     const router = useRouter();
 
     // DELETE WORK
-    const handleDelete = async () => {
-        const hasConfirmed = confirm(
-            "Are you sure you want to delete this work?"
-        );
-
-        if (hasConfirmed) {
-            try {
-                await fetch(`api/work/${work._id}`, {
-                    method: "DELETE",
-                });
-                window.location.reload();
-            } catch (err) {
-                console.log(err);
+    const handleDelete = () => {
+        toast(
+            (t) => (
+                <div style={{display: "flex", flexDirection: "column"}}>
+                    <p>Are you sure you want to delete this work?</p>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginTop: "10px",
+                        }}
+                    >
+                        <button
+                            onClick={async () => {
+                                try {
+                                    await fetch(`api/work/${work._id}`, {
+                                        method: "DELETE",
+                                    });
+                                    toast.dismiss(t.id);
+                                    window.location.reload(); // Або оновіть стан, щоб відобразити зміни
+                                } catch (err) {
+                                    console.log(err);
+                                    toast.error("Error deleting work");
+                                }
+                            }}
+                            style={{
+                                backgroundColor: "#f44336", // червоний колір
+                                color: "white",
+                                border: "none",
+                                padding: "8px 16px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                marginRight: "8px",
+                            }}
+                        >
+                            Yes, delete it
+                        </button>
+                        <button
+                            onClick={() => toast.dismiss(t.id)}
+                            style={{
+                                backgroundColor: "gray", // сірий колір
+                                color: "white",
+                                border: "none",
+                                padding: "8px 16px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ),
+            {
+                duration: 4000,
             }
-        }
+        );
     };
 
     const {data: session, update} = useSession();

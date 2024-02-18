@@ -13,6 +13,7 @@ import "@styles/WorkDetail.scss";
 import {useSession} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import toast from "react-hot-toast";
 
 const WorkDetails = () => {
     const [loading, setLoading] = useState(true);
@@ -121,8 +122,11 @@ const WorkDetails = () => {
             } catch (err) {
                 console.log(err);
             }
+            toast.success(" Work added to cart");
         } else {
-            confirm("This item is already in your cart");
+            // confirm("This item is already in your cart");
+            toast.error("This item is already in your cart");
+
             return;
         }
     };

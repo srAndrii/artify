@@ -15,7 +15,7 @@ const Navbar = () => {
     const [dropdownMenu, setDropdownMenu] = useState(false);
 
     const handleLogout = async () => {
-        signOut({callbackUrl: "/login"});
+        signOut({callbackUrl: "/"});
     };
 
     const [query, setQuery] = useState("");

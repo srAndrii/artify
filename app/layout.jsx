@@ -13,7 +13,7 @@ const layout = ({children}) => {
         <html lang='en'>
             <body>
                 <Provider>
-                    <Toaster position='top-right' reverseOrder={true} />
+                    <Toaster position='top-center' reverseOrder={true} />
                     <EdgeStoreProvider>
                         <main>{children}</main>
                     </EdgeStoreProvider>
