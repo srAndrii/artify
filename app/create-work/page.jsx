@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const CreateWork = () => {
     const [loading, setLoading] = useState(false);
     const [btnLoadinbg, setBtnLoadinbg] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const {data: session} = useSession();
     const {edgestore} = useEdgeStore();
@@ -28,9 +29,39 @@ const CreateWork = () => {
     if (session) {
         work.creator = session?.user?._id;
     }
+    const validateInput = (name, value) => {
+        if (!value.trim()) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: "This field cannot be empty!",
+            }));
+        } else {
+            setErrors((prev) => {
+                const newState = {...prev};
+                delete newState[name];
+                return newState;
+            });
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationErrors = {
+            category: !work.category && "Please select a category!",
+            photos: !work.photos.length && "Please add at least one photo!",
+            formErrors:
+                Object.keys(errors).length > 0 &&
+                "Please correct the errors in the form!",
+        };
+
+        // Find the first error message
+        const firstError = Object.values(validationErrors).find((msg) => msg);
+
+        if (firstError) {
+            toast.error(firstError);
+            return;
+        }
 
         toast.promise(
             (async () => {
@@ -90,6 +121,8 @@ const CreateWork = () => {
                 setWork={setWork}
                 handleSubmit={handleSubmit}
                 loading={loading}
+                errors={errors}
+                validateInput={validateInput}
             />
         </>
     );

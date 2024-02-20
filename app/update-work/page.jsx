@@ -13,6 +13,7 @@ const UpdateWork = () => {
     const {data: session} = useSession();
     const [loading, setLoading] = useState(true);
     const [btnLoadinbg, setBtnLoadinbg] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const {edgestore} = useEdgeStore();
 
@@ -26,6 +27,21 @@ const UpdateWork = () => {
         price: "",
         photos: [],
     });
+
+    const validateInput = (name, value) => {
+        if (!value.trim()) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: "This field cannot be empty!",
+            }));
+        } else {
+            setErrors((prev) => {
+                const newState = {...prev};
+                delete newState[name];
+                return newState;
+            });
+        }
+    };
 
     useEffect(() => {
         const getWorkDetails = async () => {
@@ -57,6 +73,22 @@ const UpdateWork = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationErrors = {
+            category: !work.category && "Please select a category!",
+            photos: !work.photos.length && "Please add at least one photo!",
+            formErrors:
+                Object.keys(errors).length > 0 &&
+                "Please correct the errors in the form!",
+        };
+
+        // Find the first error message
+        const firstError = Object.values(validationErrors).find((msg) => msg);
+
+        if (firstError) {
+            toast.error(firstError);
+            return;
+        }
 
         toast.promise(
             (async () => {
@@ -116,6 +148,8 @@ const UpdateWork = () => {
                 setWork={setWork}
                 handleSubmit={handleSubmit}
                 loading={btnLoadinbg}
+                errors={errors}
+                validateInput={validateInput}
             />
         </>
     );

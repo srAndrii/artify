@@ -1,12 +1,23 @@
+"use client";
 import {categories} from "@data";
 import {IoIosImages} from "react-icons/io";
 import {BiTrash} from "react-icons/bi";
 import "@styles/Form.scss";
 import {useEdgeStore} from "@lib/edgestore";
 import Button from "./button/Button";
+import {useState} from "react";
 
-const Form = ({type, work, setWork, loading, handleSubmit}) => {
+const Form = ({
+    type,
+    work,
+    setWork,
+    loading,
+    handleSubmit,
+    errors,
+    validateInput,
+}) => {
     const {edgestore} = useEdgeStore();
+    // const [errors, setErrors] = useState({});
 
     const handleUploadPhotos = (e) => {
         const newPhotos = e.target.files;
@@ -20,20 +31,22 @@ const Form = ({type, work, setWork, loading, handleSubmit}) => {
 
     const handleRemovePhoto = async (indexToRemove) => {
         try {
-            const removedPhotoUrl = work.photos[indexToRemove];
+            const removedPhoto = work.photos[indexToRemove];
 
-            await edgestore.publicFiles.delete({
-                url: removedPhotoUrl,
-            });
+            // Check if the photo has a URL property, indicating it's already been uploaded
+            if (typeof removedPhoto === "string" || removedPhoto.url) {
+                // It's an uploaded photo, so call the server to delete
+                await edgestore.publicFiles.delete({
+                    url: removedPhoto.url || removedPhoto,
+                });
+            }
 
-            setWork((prevWork) => {
-                return {
-                    ...prevWork,
-                    photos: prevWork.photos.filter(
-                        (_, index) => index !== indexToRemove
-                    ),
-                };
-            });
+            setWork((prevWork) => ({
+                ...prevWork,
+                photos: prevWork.photos.filter(
+                    (_, index) => index !== indexToRemove
+                ),
+            }));
         } catch (error) {
             console.error("Error deleting photo:", error.message);
         }
@@ -46,7 +59,9 @@ const Form = ({type, work, setWork, loading, handleSubmit}) => {
                 [name]: value,
             };
         });
+        validateInput(name, value);
     };
+
     return (
         <div className='form'>
             <h1>{type} Your Work</h1>
@@ -129,30 +144,48 @@ const Form = ({type, work, setWork, loading, handleSubmit}) => {
                         type='text'
                         placeholder='Title'
                         onChange={handleChange}
+                        onBlur={(e) =>
+                            validateInput(e.target.name, e.target.value)
+                        }
                         name='title'
                         value={work.title}
                         required
                     />
+                    {errors.title && (
+                        <p style={{color: "red"}}>{errors.title}</p>
+                    )}
                     <p>Description</p>
                     <textarea
                         type='text'
                         placeholder='Description'
                         onChange={handleChange}
+                        onBlur={(e) =>
+                            validateInput(e.target.name, e.target.value)
+                        }
                         name='description'
                         value={work.description}
                         required
                     />
+                    {errors.description && (
+                        <p style={{color: "red"}}>{errors.description}</p>
+                    )}
                     <p>Now, set your PRICE</p>
                     <span>$</span>
                     <input
                         type='number'
                         placeholder='Price'
                         onChange={handleChange}
+                        onBlur={(e) =>
+                            validateInput(e.target.name, e.target.value)
+                        }
                         name='price'
                         value={work.price}
                         required
                         className='price'
                     />
+                    {errors.price && (
+                        <p style={{color: "red"}}>{errors.price}</p>
+                    )}
                 </div>
                 <Button text={"PUBLISH YOUR WORK"} loading={loading} />
             </form>

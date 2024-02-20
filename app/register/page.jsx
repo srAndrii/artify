@@ -21,7 +21,7 @@ const Register = () => {
 
     const handlePasswordValidation = () => {
         if (formData.password.length < 6) {
-            setPasswordError("Пароль має бути не менше 6 символів");
+            setPasswordError("The password must be at least 6 characters long");
         } else {
             setPasswordError("");
         }
@@ -29,7 +29,7 @@ const Register = () => {
 
     const handleConfirmPasswordValidation = () => {
         if (formData.password !== formData.confirmPasword) {
-            setConfirmPasswordError("Паролі не співпадають");
+            setConfirmPasswordError("Passwords do not match");
         } else {
             setConfirmPasswordError("");
         }
@@ -42,7 +42,6 @@ const Register = () => {
         if (files) {
             setFile(files[0]);
         }
-
 
         setFormData({
             ...formData,

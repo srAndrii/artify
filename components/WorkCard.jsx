@@ -51,14 +51,14 @@ const WorkCard = ({work}) => {
                                         method: "DELETE",
                                     });
                                     toast.dismiss(t.id);
-                                    window.location.reload(); // Або оновіть стан, щоб відобразити зміни
+                                    window.location.reload();
                                 } catch (err) {
                                     console.log(err);
                                     toast.error("Error deleting work");
                                 }
                             }}
                             style={{
-                                backgroundColor: "#f44336", // червоний колір
+                                backgroundColor: "#f44336",
                                 color: "white",
                                 border: "none",
                                 padding: "8px 16px",
@@ -72,7 +72,7 @@ const WorkCard = ({work}) => {
                         <button
                             onClick={() => toast.dismiss(t.id)}
                             style={{
-                                backgroundColor: "gray", // сірий колір
+                                backgroundColor: "gray",
                                 color: "white",
                                 border: "none",
                                 padding: "8px 16px",
@@ -122,7 +122,7 @@ const WorkCard = ({work}) => {
                     className='slider'
                     style={{transform: `translateX(-${currentIndex * 100}%)`}}
                 >
-                    {work.workPhotoPaths?.map((photo, index) => (
+                    {work?.workPhotoPaths?.map((photo, index) => (
                         <div className='slide' key={index}>
                             <img src={photo} alt='Work Card Photo' />
                             <div
