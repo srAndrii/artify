@@ -1,13 +1,16 @@
 "use client";
-import {useEdgeStore} from "@lib/edgestore";
-import "@styles/Register.scss";
+
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {FcGoogle} from "react-icons/fc";
+import {useEdgeStore} from "@lib/edgestore";
+import "@styles/Register.scss";
 
 const Register = () => {
     const {edgestore} = useEdgeStore();
+    const router = useRouter();
+
     const [file, setFile] = useState();
     const [formData, setFormData] = useState({
         username: "",
@@ -18,6 +21,11 @@ const Register = () => {
     });
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const [passwordMatch, setPasswordMatch] = useState(true);
+
+    useEffect(() => {
+        setPasswordMatch(formData.password === formData.confirmPasword);
+    }, [formData.password, formData.confirmPasword]);
 
     const handlePasswordValidation = () => {
         if (formData.password.length < 6) {
@@ -36,52 +44,25 @@ const Register = () => {
     };
 
     const handleChange = (e) => {
-        e.preventDefault();
         const {name, value, files} = e.target;
-
         if (files) {
             setFile(files[0]);
         }
-
-        setFormData({
-            ...formData,
-            [name]: value,
-            [name]: name === "profileImage" ? files[0] : value,
-        });
+        setFormData({...formData, [name]: name === "profileImage" ? files[0] : value});
     };
-
-    const router = useRouter();
-
-    const [passwordMatch, setPasswordMatch] = useState(true);
-
-    useEffect(() => {
-        setPasswordMatch(formData.password === formData.confirmPasword);
-    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             let imageUrl = null;
-
-            // Upload the profile image if a file is selected
             if (file) {
-                const res = await edgestore.publicFiles.upload({
-                    file: file,
-                });
-
-                // Assuming the response from the upload contains a 'url' property
+                const res = await edgestore.publicFiles.upload({file});
                 imageUrl = res.url;
             }
 
-            // Update the formData with the image URL
-            const updatedFormData = {
-                ...formData,
-                profileImage: imageUrl,
-            };
-
+            const updatedFormData = {...formData, profileImage: imageUrl};
             const registerForm = new FormData();
-            for (let key in updatedFormData) {
+            for (const key in updatedFormData) {
                 registerForm.append(key, updatedFormData[key]);
             }
 
@@ -101,13 +82,10 @@ const Register = () => {
     const loginWithGoogle = () => {
         signIn("google", {callbackUrl: "/"});
     };
+
     return (
         <div className='register'>
-            <img
-                src='/assets/register.jpg'
-                alt='register'
-                className='register_decor'
-            />
+            <img src='/assets/register.jpg' alt='register' className='register_decor' />
             <div className='register_content'>
                 <form className='register_content_form' onSubmit={handleSubmit}>
                     <input
@@ -134,9 +112,7 @@ const Register = () => {
                         onBlur={handlePasswordValidation}
                         required
                     />
-                    {passwordError && (
-                        <p style={{color: "red"}}>{passwordError}</p>
-                    )}
+                    {passwordError && <p style={{color: "red"}}>{passwordError}</p>}
                     <input
                         placeholder='Confirm Password'
                         name='confirmPasword'
@@ -146,9 +122,7 @@ const Register = () => {
                         onBlur={handleConfirmPasswordValidation}
                         required
                     />
-                    {confirmPasswordError && (
-                        <p style={{color: "red"}}>{confirmPasswordError}</p>
-                    )}
+                    {confirmPasswordError && <p style={{color: "red"}}>{confirmPasswordError}</p>}
                     <input
                         id='image'
                         type='file'
@@ -166,29 +140,18 @@ const Register = () => {
                         <img
                             src={URL.createObjectURL(formData.profileImage)}
                             alt='Profile'
-                            style={{
-                                width: "80px",
-                                height: "80px",
-                                borderRadius: "50%",
-                            }}
+                            style={{width: "80px", height: "80px", borderRadius: "50%"}}
                         />
                     )}
-                    <button
-                        type='submit'
-                        disabled={!passwordMatch || passwordError}
-                    >
+                    <button type='submit' disabled={!passwordMatch || passwordError}>
                         Register
                     </button>
                 </form>
-                <button
-                    type='button'
-                    className='google'
-                    onClick={loginWithGoogle}
-                >
+                <button type='button' className='google' onClick={loginWithGoogle}>
                     <p>Log In with Google</p>
                     <FcGoogle />
                 </button>
-                <a href='/login'>Alredy have an account? Log In Here</a>
+                <a href='/login'>Already have an account? Log In Here</a>
             </div>
         </div>
     );

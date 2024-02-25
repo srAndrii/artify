@@ -1,14 +1,7 @@
 "use client";
 import Loader from "@components/Loader";
 import Navbar from "@components/Navbar";
-import {
-    ArrowBackIosNew,
-    ArrowForwardIos,
-    Edit,
-    Favorite,
-    FavoriteBorder,
-    ShoppingCart,
-} from "@mui/icons-material";
+import {ArrowBackIosNew, ArrowForwardIos, Edit, Favorite, FavoriteBorder, ShoppingCart} from "@mui/icons-material";
 import "@styles/WorkDetail.scss";
 import {useSession} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -44,17 +37,11 @@ const WorkDetails = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const goToNextSlide = () => {
-        setCurrentIndex(
-            (prevIndex) => (prevIndex + 1) % work.workPhotoPaths.length
-        );
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % work.workPhotoPaths.length);
     };
 
     const goToPrevSlide = () => {
-        setCurrentIndex(
-            (prevIndex) =>
-                (prevIndex - 1 + work.workPhotoPaths.length) %
-                work.workPhotoPaths.length
-        );
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + work.workPhotoPaths.length) % work.workPhotoPaths.length);
     };
 
     // SHOW MORE PHOTOS
@@ -80,12 +67,9 @@ const WorkDetails = () => {
     const isLiked = wishlist?.find((item) => item?._id === work._id);
 
     const patchWishlist = async () => {
-        const response = await fetch(
-            `api/user/${userId}/wishlist/${work._id}`,
-            {
-                method: "PATCH",
-            }
-        );
+        const response = await fetch(`api/user/${userId}/wishlist/${work._id}`, {
+            method: "PATCH",
+        });
         const data = await response.json();
         update({user: {wishlist: data.wishlist}}); // update session
     };
@@ -150,11 +134,7 @@ const WorkDetails = () => {
                         </div>
                     ) : (
                         <div className='save' onClick={patchWishlist}>
-                            {isLiked ? (
-                                <Favorite sx={{color: "red"}} />
-                            ) : (
-                                <FavoriteBorder />
-                            )}
+                            {isLiked ? <Favorite sx={{color: "red"}} /> : <FavoriteBorder />}
                             <p>Save</p>
                         </div>
                     )}
@@ -192,19 +172,15 @@ const WorkDetails = () => {
                     </div>
                 </div>
                 <div className='photos'>
-                    {work.workPhotoPaths
-                        ?.slice(0, visiblePhotos)
-                        .map((photo, index) => (
-                            <img
-                                src={photo}
-                                alt='work-demo'
-                                key={index}
-                                onClick={() => handleSelectedPhoto(index)}
-                                className={
-                                    index === currentIndex ? "selected" : ""
-                                }
-                            />
-                        ))}
+                    {work.workPhotoPaths?.slice(0, visiblePhotos).map((photo, index) => (
+                        <img
+                            src={photo}
+                            alt='work-demo'
+                            key={index}
+                            onClick={() => handleSelectedPhoto(index)}
+                            className={index === currentIndex ? "selected" : ""}
+                        />
+                    ))}
 
                     {visiblePhotos < work.workPhotoPaths.length && (
                         <div className='show-more' onClick={loadMorePhotos}>
@@ -220,9 +196,7 @@ const WorkDetails = () => {
                     <img
                         src={work.creator.profileImagePath}
                         alt='profile'
-                        onClick={() =>
-                            router.push(`/shop?id=${work.creator._id}`)
-                        }
+                        onClick={() => router.push(`/shop?id=${work.creator._id}`)}
                     />
                     <h3>Created by {work.creator.username}</h3>
                 </div>

@@ -1,11 +1,11 @@
 "use client";
 
-import "@styles/Login.scss";
-import {signIn} from "next-auth/react";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import {FcGoogle} from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
+import "@styles/Login.scss";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -16,7 +16,6 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await signIn("credentials", {
                 redirect: false,
@@ -25,7 +24,7 @@ const Login = () => {
             });
 
             if (response.ok) {
-                toast.success("Successfully Loged In");
+                toast.success("Successfully Logged In");
                 router.push("/");
             }
 
@@ -39,8 +38,9 @@ const Login = () => {
     };
 
     const loginWithGoogle = () => {
-        signIn("google", {callbackUrl: "/"});
+        signIn("google", { callbackUrl: "/" });
     };
+
     return (
         <div className='login'>
             <img src='/assets/login.jpg' alt='login' className='login_decor' />
@@ -74,4 +74,5 @@ const Login = () => {
         </div>
     );
 };
+
 export default Login;

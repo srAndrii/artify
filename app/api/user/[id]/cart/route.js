@@ -12,6 +12,6 @@ export const POST = async (req, {params}) => {
         return new Response(JSON.stringify(user.cart), {status: 200});
     } catch (err) {
         console.log(err);
-        return new Response("Failed to update card", {status: 500});
+        return new Response("Failed to update cart", {status: 500});
     }
 };

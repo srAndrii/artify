@@ -1,5 +1,4 @@
 import Work from "@models/Work";
-import {writeFile} from "fs/promises";
 
 import {connectToDB} from "@mongodb/database";
 

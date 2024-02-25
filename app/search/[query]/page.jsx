@@ -7,27 +7,25 @@ import {useParams} from "next/navigation";
 import {useState, useEffect} from "react";
 import "@styles/Search.scss";
 
-const SearcPage = () => {
+const SearchPage = () => {
     const {query} = useParams();
-
     const [loading, setLoading] = useState(true);
     const [workList, setWorkList] = useState([]);
 
-    const getWorkList = async () => {
-        try {
-            const response = await fetch(`/api/work/search/${query}`, {
-                method: "GET",
-            });
-
-            const data = await response.json();
-            setWorkList(data);
-            setLoading(false);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     useEffect(() => {
+        const getWorkList = async () => {
+            try {
+                const response = await fetch(`/api/work/search/${query}`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+                setWorkList(data);
+                setLoading(false);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
         getWorkList();
     }, [query]);
 
@@ -37,9 +35,9 @@ const SearcPage = () => {
         <>
             <Navbar />
             <h1 className='title-list'>{query} result(s)</h1>
-
             <WorkList data={workList} />
         </>
     );
 };
-export default SearcPage;
+
+export default SearchPage;

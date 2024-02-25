@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const CreateWork = () => {
     const [loading, setLoading] = useState(false);
-    const [btnLoadinbg, setBtnLoadinbg] = useState(false);
+
     const [errors, setErrors] = useState({});
 
     const {data: session} = useSession();
@@ -50,9 +50,7 @@ const CreateWork = () => {
         const validationErrors = {
             category: !work.category && "Please select a category!",
             photos: !work.photos.length && "Please add at least one photo!",
-            formErrors:
-                Object.keys(errors).length > 0 &&
-                "Please correct the errors in the form!",
+            formErrors: Object.keys(errors).length > 0 && "Please correct the errors in the form!",
         };
 
         // Find the first error message

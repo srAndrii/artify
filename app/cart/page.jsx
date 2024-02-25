@@ -4,12 +4,7 @@ import Loader from "@components/Loader";
 import Navbar from "@components/Navbar";
 import {useSession} from "next-auth/react";
 import "@styles/Cart.scss";
-import {
-    AddCircle,
-    ArrowCircleLeft,
-    Delete,
-    RemoveCircle,
-} from "@mui/icons-material";
+import {AddCircle, ArrowCircleLeft, Delete, RemoveCircle} from "@mui/icons-material";
 import getStripe from "@lib/getStripe";
 import toast from "react-hot-toast";
 
@@ -90,7 +85,6 @@ const Cart = () => {
         }
     };
 
-
     return !session?.user?.cart ? (
         <Loader />
     ) : (
@@ -116,9 +110,7 @@ const Cart = () => {
                                         <div className='text'>
                                             <h3>{item.title}</h3>
                                             <p>Category: {item.category}</p>
-                                            <p>
-                                                Seller: {item.creator.username}
-                                            </p>
+                                            <p>Seller: {item.creator.username}</p>
                                         </div>
                                     </div>
 
@@ -148,10 +140,7 @@ const Cart = () => {
                                     </div>
 
                                     <div className='remove'>
-                                        <Delete
-                                            sx={{cursor: "pointer"}}
-                                            onClick={() => removeFromCart(item)}
-                                        />
+                                        <Delete sx={{cursor: "pointer"}} onClick={() => removeFromCart(item)} />
                                     </div>
                                 </div>
                             ))}
@@ -160,9 +149,7 @@ const Cart = () => {
                                 <a href='/'>
                                     <ArrowCircleLeft /> Continue Shopping
                                 </a>
-                                <button onClick={handleCheckout}>
-                                    CHECK OUT NOW
-                                </button>
+                                <button onClick={handleCheckout}>CHECK OUT NOW</button>
                             </div>
                         </div>
                     )}

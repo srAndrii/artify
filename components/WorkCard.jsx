@@ -1,16 +1,15 @@
 import {ArrowBackIosNew, ArrowForwardIos, Delete, Favorite, FavoriteBorder} from "@mui/icons-material";
+import "@styles/WorkCard.scss";
 import {useSession} from "next-auth/react";
+
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
-import "@styles/WorkCard.scss";
 
 const WorkCard = ({work}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [loadedImages, setLoadedImages] = useState([0]); // Initialize with the first image index
-    const router = useRouter();
-    const {data: session} = useSession();
-    const userId = session?.user?._id;
+
+    const [loadedImages, setLoadedImages] = useState([0]); // Preload the first two images initially
 
     const loadAllImages = () => {
         setLoadedImages(work.workPhotoPaths.map((_, index) => index)); // Load all images
@@ -33,6 +32,8 @@ const WorkCard = ({work}) => {
             return newIndex;
         });
     };
+
+    const router = useRouter();
 
     const PreloadedImage = ({src, alt, ...props}) => {
         const [currentSrc, setCurrentSrc] = useState(null);
@@ -105,6 +106,9 @@ const WorkCard = ({work}) => {
             }
         );
     };
+
+    const {data: session, update} = useSession();
+    const userId = session?.user?._id;
 
     //ADD TO WISHLIST
     const wishlist = session?.user?.wishlist;
@@ -231,5 +235,4 @@ const WorkCard = ({work}) => {
         </div>
     );
 };
-
 export default WorkCard;

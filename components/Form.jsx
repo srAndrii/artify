@@ -7,15 +7,7 @@ import {useEdgeStore} from "@lib/edgestore";
 import Button from "./button/Button";
 import {useState} from "react";
 
-const Form = ({
-    type,
-    work,
-    setWork,
-    loading,
-    handleSubmit,
-    errors,
-    validateInput,
-}) => {
+const Form = ({type, work, setWork, loading, handleSubmit, errors, validateInput}) => {
     const {edgestore} = useEdgeStore();
     // const [errors, setErrors] = useState({});
 
@@ -43,9 +35,7 @@ const Form = ({
 
             setWork((prevWork) => ({
                 ...prevWork,
-                photos: prevWork.photos.filter(
-                    (_, index) => index !== indexToRemove
-                ),
+                photos: prevWork.photos.filter((_, index) => index !== indexToRemove),
             }));
         } catch (error) {
             console.error("Error deleting photo:", error.message);
@@ -74,9 +64,7 @@ const Form = ({
                             onClick={() => {
                                 setWork({...work, category: item});
                             }}
-                            className={`${
-                                work.category === item ? "selected" : ""
-                            }`}
+                            className={`${work.category === item ? "selected" : ""}`}
                         >
                             {item}
                         </p>
@@ -106,17 +94,11 @@ const Form = ({
                         {work?.photos?.map((photo, index) => (
                             <div key={index} className='photo'>
                                 {photo instanceof Object ? (
-                                    <img
-                                        src={URL.createObjectURL(photo)}
-                                        alt='work'
-                                    />
+                                    <img src={URL.createObjectURL(photo)} alt='work' />
                                 ) : (
                                     <img src={photo} alt='work' />
                                 )}
-                                <button
-                                    type='button'
-                                    onClick={() => handleRemovePhoto(index)}
-                                >
+                                <button type='button' onClick={() => handleRemovePhoto(index)}>
                                     <BiTrash />
                                 </button>
                             </div>
@@ -144,48 +126,36 @@ const Form = ({
                         type='text'
                         placeholder='Title'
                         onChange={handleChange}
-                        onBlur={(e) =>
-                            validateInput(e.target.name, e.target.value)
-                        }
+                        onBlur={(e) => validateInput(e.target.name, e.target.value)}
                         name='title'
                         value={work.title}
                         required
                     />
-                    {errors.title && (
-                        <p style={{color: "red"}}>{errors.title}</p>
-                    )}
+                    {errors.title && <p style={{color: "red"}}>{errors.title}</p>}
                     <p>Description</p>
                     <textarea
                         type='text'
                         placeholder='Description'
                         onChange={handleChange}
-                        onBlur={(e) =>
-                            validateInput(e.target.name, e.target.value)
-                        }
+                        onBlur={(e) => validateInput(e.target.name, e.target.value)}
                         name='description'
                         value={work.description}
                         required
                     />
-                    {errors.description && (
-                        <p style={{color: "red"}}>{errors.description}</p>
-                    )}
+                    {errors.description && <p style={{color: "red"}}>{errors.description}</p>}
                     <p>Now, set your PRICE</p>
                     <span>$</span>
                     <input
                         type='number'
                         placeholder='Price'
                         onChange={handleChange}
-                        onBlur={(e) =>
-                            validateInput(e.target.name, e.target.value)
-                        }
+                        onBlur={(e) => validateInput(e.target.name, e.target.value)}
                         name='price'
                         value={work.price}
                         required
                         className='price'
                     />
-                    {errors.price && (
-                        <p style={{color: "red"}}>{errors.price}</p>
-                    )}
+                    {errors.price && <p style={{color: "red"}}>{errors.price}</p>}
                 </div>
                 <Button text={"PUBLISH YOUR WORK"} loading={loading} />
             </form>

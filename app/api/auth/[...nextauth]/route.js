@@ -1,9 +1,9 @@
-import User from "@models/User";
-import {connectToDB} from "@mongodb/database";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {compare} from "bcryptjs";
+import {connectToDB} from "@mongodb/database";
+import User from "@models/User";
 
 const handler = NextAuth({
     providers: [
@@ -46,9 +46,7 @@ const handler = NextAuth({
 
     callbacks: {
         async session({session}) {
-            const sessionUser = await User.findOne({
-                email: session.user.email,
-            });
+            const sessionUser = await User.findOne({email: session.user.email});
             session.user.id = sessionUser._id.toString();
             session.user = {...session.user, ...sessionUser._doc};
             return session;
@@ -57,7 +55,7 @@ const handler = NextAuth({
             if (account.provider === "google") {
                 try {
                     await connectToDB();
-                    //Check is the user exist
+                    // Check if the user exists
                     let user = await User.findOne({email: profile.email});
 
                     if (!user) {
@@ -73,7 +71,7 @@ const handler = NextAuth({
                     }
                     return user;
                 } catch (err) {
-                    console.log("Error cheking if user exist:", err.message);
+                    console.log("Error checking if user exists:", err.message);
                 }
             }
             return true; // Do different verification for other providers that don't have `email_verified`
