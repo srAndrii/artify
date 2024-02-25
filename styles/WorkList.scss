@@ -2,7 +2,7 @@
 @import "./breakpoints.scss";
 
 .work-list {
-    padding: 0 0px 120px;
+    padding: 0 0px 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -10,5 +10,23 @@
 
     @include lg {
         padding: 0 20px 120px;
+    }
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    button {
+        margin: 0 5px 20px;
+        padding: 5px 10px;
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid black;
+
+        &.active {
+            background-color: black;
+            color: white;
+        }
     }
 }
