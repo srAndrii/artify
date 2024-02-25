@@ -1,35 +1,50 @@
-import {
-    ArrowBackIosNew,
-    ArrowForwardIos,
-    Delete,
-    Favorite,
-    FavoriteBorder,
-} from "@mui/icons-material";
-import "@styles/WorkCard.scss";
+import {ArrowBackIosNew, ArrowForwardIos, Delete, Favorite, FavoriteBorder} from "@mui/icons-material";
 import {useSession} from "next-auth/react";
-
 import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
+import "@styles/WorkCard.scss";
 
 const WorkCard = ({work}) => {
-    // SLIDER
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [loadedImages, setLoadedImages] = useState([0]); // Initialize with the first image index
+    const router = useRouter();
+    const {data: session} = useSession();
+    const userId = session?.user?._id;
+
+    const loadAllImages = () => {
+        setLoadedImages(work.workPhotoPaths.map((_, index) => index)); // Load all images
+    };
 
     const goToNextSlide = () => {
-        setCurrentIndex(
-            (prevIndex) => (prevIndex + 1) % work.workPhotoPaths.length
-        );
+        setCurrentIndex((prevIndex) => {
+            const newIndex = (prevIndex + 1) % work.workPhotoPaths.length;
+            if (newIndex === 1) {
+                // Load all images when moving from the first to the second image
+                loadAllImages();
+            }
+            return newIndex;
+        });
     };
 
     const goToPrevSlide = () => {
-        setCurrentIndex(
-            (prevIndex) =>
-                (prevIndex - 1 + work.workPhotoPaths.length) %
-                work.workPhotoPaths.length
-        );
+        setCurrentIndex((prevIndex) => {
+            const newIndex = (prevIndex - 1 + work.workPhotoPaths.length) % work.workPhotoPaths.length;
+            return newIndex;
+        });
     };
-    const router = useRouter();
+
+    const PreloadedImage = ({src, alt, ...props}) => {
+        const [currentSrc, setCurrentSrc] = useState(null);
+
+        useEffect(() => {
+            const img = new Image();
+            img.onload = () => setCurrentSrc(src); // Update current image when the new image is loaded
+            img.src = src;
+        }, [src]);
+
+        return currentSrc ? <img src={currentSrc} alt={alt} {...props} /> : null;
+    };
 
     // DELETE WORK
     const handleDelete = () => {
@@ -91,21 +106,15 @@ const WorkCard = ({work}) => {
         );
     };
 
-    const {data: session, update} = useSession();
-    const userId = session?.user?._id;
-
     //ADD TO WISHLIST
     const wishlist = session?.user?.wishlist;
 
     const isLiked = wishlist?.find((item) => item?._id === work._id);
 
     const patchWishlist = async () => {
-        const response = await fetch(
-            `api/user/${userId}/wishlist/${work._id}`,
-            {
-                method: "PATCH",
-            }
-        );
+        const response = await fetch(`api/user/${userId}/wishlist/${work._id}`, {
+            method: "PATCH",
+        });
         const data = await response.json();
         update({user: {wishlist: data.wishlist}}); // update session
     };
@@ -118,18 +127,15 @@ const WorkCard = ({work}) => {
             }}
         >
             <div className='slider-container'>
-                <div
-                    className='slider'
-                    style={{transform: `translateX(-${currentIndex * 100}%)`}}
-                >
-                    {work?.workPhotoPaths?.map((photo, index) => (
+                <div className='slider' style={{transform: `translateX(-${currentIndex * 100}%)`}}>
+                    {work.workPhotoPaths.map((photo, index) => (
                         <div className='slide' key={index}>
-                            <img src={photo} alt='Work Card Photo' />
+                            {loadedImages.includes(index) ? <PreloadedImage src={photo} alt='Work Card Photo' /> : null}
                             <div
                                 className='prev-button'
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    goToPrevSlide(e);
+                                    goToPrevSlide();
                                 }}
                             >
                                 <ArrowBackIosNew sx={{fontSize: "15px"}} />
@@ -138,7 +144,7 @@ const WorkCard = ({work}) => {
                                 className='next-button'
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    goToNextSlide(e);
+                                    goToNextSlide();
                                 }}
                             >
                                 <ArrowForwardIos sx={{fontSize: "15px"}} />
@@ -147,6 +153,7 @@ const WorkCard = ({work}) => {
                     ))}
                 </div>
             </div>
+
             <div className='info'>
                 <div>
                     <h3>{work.title}</h3>
@@ -224,4 +231,5 @@ const WorkCard = ({work}) => {
         </div>
     );
 };
+
 export default WorkCard;
