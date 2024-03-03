@@ -1,3 +1,59 @@
+# Artify Project Overview
+
+Artify is a digital platform developed using the Next.js framework, providing artists and art enthusiasts a space to discover, share, and purchase art. The project is bootstrapped with `create-next-app`, offering a comprehensive solution for managing artworks online.
+
+## Technologies Used
+
+- **Next.js**: The core framework for building the website, providing server-side rendering and static site generation.
+- **MongoDB & Mongoose**: For database management, storing user profiles, artworks (referred to as "works"), and transactional information.
+- **Next-Auth**: For authentication purposes, including Google login and credential-based logins.
+- **EdgeStore**: A service used within the application, likely for handling data storage and retrieval on the edge, enhancing performance.
+- **Stripe**: Integrated for handling payment processes, allowing users to purchase artworks securely.
+- **React.js**: Used alongside Next.js for building the user interface with reusable components.
+- **Material-UI**: A React UI framework providing pre-built material components for faster and easier web development.
+- **SASS**: For styling, enhancing CSS with more powerful features like variables, nested rules, and mixins.
+
+## User Capabilities
+
+- **Home Page**: Users can explore the main landing page featuring highlighted artworks, trending artists, and special offers.
+  
+
+https://github.com/srAndrii/artify/assets/90868495/0fe77762-b83c-4698-90d8-2ecaa23105dc
+
+
+- **User Authentication**: Secure login and registration processes with options for Google or email/password, including profile management features.
+  
+
+https://github.com/srAndrii/artify/assets/90868495/112070c8-c30b-4943-92a7-12549fe331a8
+
+
+- **Create Work** and **Update Work**: Artists can upload and list new artworks, providing details such as title, description, category, and price.Artists have the ability to edit the details of their existing artworks to keep information up-to-date.
+  
+
+https://github.com/srAndrii/artify/assets/90868495/f1999641-5354-46a7-acd8-f83323fc7cc6
+
+
+- **Delete Work**: Allows artists to remove their artworks from the platform, ensuring control over their available listings.
+  
+
+https://github.com/srAndrii/artify/assets/90868495/5d877b71-17e4-47f3-ab1b-fbc5feccf40b
+
+
+- **Wishlist**: Users can add artworks to their wishlist, making it easy to find and consider purchasing in the future.
+
+https://github.com/srAndrii/artify/assets/90868495/ab1dcdab-5662-4fdf-8974-251d8675c39c
+
+
+- **Cart and Checkout**: Provides a seamless shopping experience, allowing users to add artworks to their cart and proceed with secure checkout and payment.
+
+
+https://github.com/srAndrii/artify/assets/90868495/b844eea3-d04a-4afc-a0dd-3421f25a6ba7
+
+
+
+
+This project harnesses the power of modern web technologies to create a seamless and interactive experience for art lovers and creators alike.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
